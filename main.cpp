@@ -2,77 +2,94 @@
 #include <string>
 using namespace std;
 
-struct Book {
+struct Autor {
 private:
-    string* _name = nullptr;
-    string* _autor = nullptr;
-    int* _year = nullptr;
+    string *_name = nullptr;
+    int *_year = nullptr;
 
 public:
-    // Геттери
     string getName() const {
         return (_name == nullptr) ? "No name" : *_name;
-    }
-    string getAvtor() const {
-        return (_autor == nullptr) ? "No author" : *_autor;
     }
     int getYear() const {
         return (_year == nullptr) ? 0 : *_year;
     }
 
-    // Сеттери
     void setName(const string& name) {
         if (_name != nullptr) {
             delete _name;
         }
         _name = new string(name);
     }
-    void setAutor(const string& autor) {
-        if (_autor != nullptr) {
-            delete _autor;
-        }
-        _autor = new string(autor);
-    }
-    void setYear(int year) {
+    void setYear(const int year) {
         if (_year != nullptr) {
             delete _year;
         }
         _year = new int(year);
     }
-
-    // Деструктор
-    ~Book() {
-        delete _name;
-        delete _autor;
+    ~Autor() {
         delete _year;
+        delete _name;
+    }
+};
+
+struct Book {
+private:
+    string *_title = nullptr;
+    int *_publication = nullptr;
+    Autor *_autor = nullptr;
+
+public:
+    string getTitle() const {
+        return (_title == nullptr) ? "No title" : *_title;
+    }
+    int getPublication() const {
+        return (_publication == nullptr) ? 0 : *_publication;
     }
 
-    // Водоспадні конструктора
-    Book() : _name(new string("No name")), _autor(new string("No author")), _year(new int(1900)) {}
+    void setTitle(const string& title) {
+        if (_title != nullptr) {
+            delete _title;
+        }
+        _title = new string(title);
+    }
+    void setPublication(const int publication) {
+        if (_publication != nullptr) {
+            delete _publication;
+        }
+        _publication = new int(publication);
+    }
 
-    Book(string name) : _name(new string(name)), _autor(new string("No author")), _year(new int(1900)) {}
+    void setAutor(const Autor& autor) {
+        if (_autor != nullptr) {
+            delete _autor;
+        }
+        _autor = new Autor(autor);
+    }
 
-    Book(string name, string autor) : _name(new string(name)), _autor(new string(autor)), _year(new int(1900)) {}
+    ~Book() {
+        delete _autor;
+        delete _publication;
+        delete _title;
+    }
 
-    Book(string name, string autor, int year) : _name(new string(name)), _autor(new string(autor)), _year(new int(year)) {}
-
-    // Метод для виведення інформації
     void about() const {
-        cout << "Name: " << getName() << ", Author: " << getAvtor() << ", Year: " << getYear() << endl;
+        cout << "Title: " << getTitle() << ", Author: " << _autor->getName()
+             << ", Year: " << _autor->getYear() << endl;
     }
 };
 
 int main() {
+    Autor a1;
+    a1.setName("John Doe");
+    a1.setYear(1980);
 
     Book b1;
-    Book b2("1984");
-    Book b3("To Kill a Mockingbird", "Harper Lee");
-    Book b4("Dune", "Frank Herbert", 1965);
+    b1.setTitle("C++ Programming");
+    b1.setPublication(2021);
+    b1.setAutor(a1);
 
     b1.about();
-    b2.about();
-    b3.about();
-    b4.about();
 
     return 0;
 }
